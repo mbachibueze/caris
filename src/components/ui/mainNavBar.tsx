@@ -10,16 +10,9 @@ import { IoMdClose } from "react-icons/io";
 const NavigationBar = () => {
 
 
-    const [scrolled, setScrolled] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY >= 100); // Trigger when scrollY > 10px
-    };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+ 
 
   const  [isOpen, setIsOpen] = useState(false)
 

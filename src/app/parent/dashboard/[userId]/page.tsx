@@ -6,9 +6,14 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Link from 'next/link';
 
+interface UserData {
+  email: string;
+  createdAt: number | string;
+}
+
 const ParentDashboard = () => {
   const { userId } = useParams();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,7 +22,7 @@ const ParentDashboard = () => {
         const userRef = doc(db, 'users', userId as string);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
-          setUser(userSnap.data());
+          setUser(userSnap.data() as UserData);
         } else {
           console.error('No user found!');
         }
