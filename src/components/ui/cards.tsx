@@ -65,10 +65,11 @@ export const Hero: React.FC<HeroProps> = ({
 
           <div className=' grid place-items-center'>
             <Image
-              src='/blob.png'
+              src='/home.svg'
               alt="blob"
-              width={600}
-              height={500}
+              width={400}
+              height={300}
+              className="sm:w-[60%] w-[80%]"
             />
           </div>
 
@@ -263,8 +264,9 @@ export const CTA = () => {
     <div className="w-[90%] mx-auto bg-[#bcdaff] text-center my-15 rounded-lg p-10 py-20 flex flex-col gap-5 items-center">
       <h1 className="font-bold lg:text-6xl md:text-5xl text-3xl">Protect your <span className="text-[#327cff]">child’s future — one vaccine</span>  at a time.</h1>
       <p className="md:text-xl ">Join thousands of parents who trust our platform to connect with certified doctors and schedule vaccinations easily. Stay on track, stay protected.</p>
-      <Link href='../signIn'></Link>
-      <button className="bg-[#1b5af5] text-white  p-4 px-10 w-fit text-center rounded-lg font-medium">Get Started Today</button>
+      <Link href='../signIn'>
+        <button className="bg-[#1b5af5] text-white  p-4 px-10 w-fit text-center rounded-lg font-medium cursor-pointer">Get Started Today</button>
+      </Link>
     </div>
   )
 }

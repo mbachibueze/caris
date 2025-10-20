@@ -29,12 +29,10 @@ const NavigationBar = () => {
 
   return (
 
-    <main className={`fixed w-full z-40 transition-all duration-300 ${
-      scrolled ? "bg-white/10 backdrop-blur-md shadow-md" : "bg-transparent"
-    }`}>
+    <main className="">
 
       <div 
-          className={`side-bar absolute backdrop-blur-lg z-50 shadow w-[100vw] h-[100vw] p-5 mb-[100vh]  duration00 left-0 top-0 transition-transform ${isOpen ? 'translate-y-0' : '-translate-y-full'}`}
+          className={`side-bar absolute backdrop-blur-lg z-50 shadow w-[100vw] h-[100vw] p-5 mb-[100vh]  duration00 left-0 top-0 transition-transform ${isOpen ? 'translate-y-0' : '-translate-y-full'} fixed`}
           style={{
             height: '100vh',
           }}
