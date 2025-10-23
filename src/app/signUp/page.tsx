@@ -1,56 +1,56 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { collection, getDocs, addDoc, query, where } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import Link from "next/link";
+import React, { useState } from "react";
+import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const SignUP = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSignUP = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
     setLoading(true);
 
     // Step 1: Validate password match
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       setLoading(false);
       return;
     }
 
     try {
       // Step 2: Check if user already exists
-      const q = query(collection(db, 'users'), where('email', '==', email));
+      const q = query(collection(db, "users"), where("email", "==", email));
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        setError('User already exists');
+        setError("User already exists");
         setLoading(false);
         return;
       }
 
       // Step 3: Create new user
-      await addDoc(collection(db, 'users'), {
+      await addDoc(collection(db, "users"), {
         email,
         password,
         createdAt: new Date().toISOString(),
       });
 
-      setSuccess('Account created successfully!');
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
+      setSuccess("Account created successfully!");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
     } catch (err) {
-      console.error('Error signing up:', err);
-      setError('Something went wrong. Please try again.');
+      console.error("Error signing up:", err);
+      setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -110,12 +110,18 @@ const SignUP = () => {
                 disabled={loading}
                 className="bg-[#1739b6] mx-auto text-white font-medium p-2 px-8 rounded md:w-fit w-full disabled:opacity-50 cursor-pointer"
               >
-                {loading ? 'Creating Account...' : 'Sign Up'}
+                {loading ? "Creating Account..." : "Sign Up"}
               </button>
             </div>
 
-            {error && <p className="text-red-500 mt-2 text-xs text-center">{error}</p>}
-            {success && <p className="text-green-500 mt-2 text-xs text-center">{success}</p>}
+            {error && (
+              <p className="text-red-500 mt-2 text-xs text-center">{error}</p>
+            )}
+            {success && (
+              <p className="text-green-500 mt-2 text-xs text-center">
+                {success}
+              </p>
+            )}
           </form>
         </fieldset>
 
@@ -123,7 +129,7 @@ const SignUP = () => {
           Forgot Password?
         </p>
         <p className="text-xs text-center text-gray-500 mt-2">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link href="/signIn" className="text-blue-700 cursor-pointer">
             Sign In
           </Link>

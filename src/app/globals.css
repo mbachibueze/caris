@@ -1,11 +1,37 @@
 @import "tailwindcss";
 
-
-
-.cardShadow{
+.cardShadow {
   border-radius: 22px;
   background: #fdfdfd;
-  box-shadow:  1px 1px 5px #5a5a5a,
-              -1px -1px 5px #ffffff;
+  box-shadow:
+    1px 1px 5px #5a5a5a,
+    -1px -1px 5px #ffffff;
 }
 
+.nav-btn {
+  padding: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+}
+
+.animate-fadeOut {
+  animation: fadeOut 5s ease-in-out forwards;
+}

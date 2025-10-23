@@ -1,40 +1,50 @@
-import React from 'react'
-
-
-
+import React from "react";
 
 const Footer = () => {
-  
-
-  
   return (
-    <div className='bg-[#1739b6]'>
-      <div className='  w-[90%] mx-auto text-white  pt-15  pb-1 '>
-
-        <div className='grid lg:grid-cols-3 gap-10 grid-cols-1 justify-between mb-5'>
-
-          <div className='flex flex-col gap-2'>
-            <div className='font-bold text-2xl uppercase text-[#327cff] flex'>
+    <div className="bg-[#1739b6]">
+      <div className="  w-[90%] mx-auto text-white  pt-15  pb-1 ">
+        <div className="grid lg:grid-cols-3 gap-10 grid-cols-1 justify-between mb-5">
+          <div className="flex flex-col gap-2">
+            <div className="font-bold text-2xl uppercase text-[#327cff] flex">
               Caris <p className="font-bold text-[#1446e1] ">+</p>
             </div>
-            <p className='text-sm leading-relaxed text-gray-300'>VaccinateEase bridges the gap between parents and healthcare professionals, making child immunisation simple, timely, and reliable. We help families connect with trusted doctors, schedule vaccination appointments, and keep accurate health records — all in one place.
+            <p className="text-sm leading-relaxed text-gray-300">
+              VaccinateEase bridges the gap between parents and healthcare
+              professionals, making child immunisation simple, timely, and
+              reliable. We help families connect with trusted doctors, schedule
+              vaccination appointments, and keep accurate health records — all
+              in one place. Our mission is to ensure every child receives
+              essential vaccines safely and on time while empowering parents
+              with reminders, access to expert guidance, and digital health
+              tracking. Because every child deserves a healthy start.
+            </p>
 
-            Our mission is to ensure every child receives essential vaccines safely and on time while empowering parents with reminders, access to expert guidance, and digital health tracking. Because every child deserves a healthy start.</p>
+            <h2 className="font-semibold text-lg">
+              Subscribe to Our Newsletter
+            </h2>
 
-            <h2 className='font-semibold text-lg'>Subscribe to Our Newsletter</h2>
-
-            <div className='flex items-center gap-2
-             bg-white w-fit p-1 rounded-full text-gray-800'>
-              <input type="text" placeholder='Enter email' className='outline-none p-2 px-4 rounded-full'  />
-              <button className='bg-[#1739b6] rounded-full px-6 text-white p-2 cursor-pointer border hover:
-              '>Subscribe</button>
+            <div
+              className="flex items-center gap-2
+             bg-white w-fit p-1 rounded-full text-gray-800"
+            >
+              <input
+                type="text"
+                placeholder="Enter email"
+                className="outline-none p-2 px-4 rounded-full"
+              />
+              <button
+                className="bg-[#1739b6] rounded-full px-6 text-white p-2 cursor-pointer border hover:
+              "
+              >
+                Subscribe
+              </button>
             </div>
-
           </div>
 
-          <div className=' lg:col-span-2 flex lg:justify-around justify-between  '>
-            <div className='flex flex-col gap-2'>
-              <h5 className='font-semibold'>Services</h5>
+          <div className=" lg:col-span-2 flex lg:justify-around justify-between  ">
+            <div className="flex flex-col gap-2">
+              <h5 className="font-semibold">Services</h5>
               <ul className="space-y-2 text-gray-300 lg:text-lg sm:text-base text-xs">
                 <li>Vaccination Scheduling</li>
                 <li>Paediatric Consultation</li>
@@ -45,8 +55,8 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div className='flex flex-col gap-2'>
-              <h5 className='font-semibold'>Company</h5>
+            <div className="flex flex-col gap-2">
+              <h5 className="font-semibold">Company</h5>
               <ul className="space-y-2 text-gray-300  lg:text-lg sm:text-base text-xs">
                 <li>About Us</li>
                 <li>Our Mission</li>
@@ -57,8 +67,8 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div className='flex flex-col gap-2'>
-              <h5 className='font-semibold'>Contact Us</h5>
+            <div className="flex flex-col gap-2">
+              <h5 className="font-semibold">Contact Us</h5>
               <ul className="space-y-2 text-gray-300 lg:text-lg sm:text-base text-xs">
                 <li>support@caris.com</li>
                 <li>info@caris.com</li>
@@ -67,15 +77,20 @@ const Footer = () => {
               </ul>
             </div>
           </div>
-
         </div>
 
         <hr />
 
-        <p className='text-gray-400  text-xs  text-center leading-loose py-2'>Copyright © 2025 <span className='text-white cursor-pointer hover:text-[#c5832b] '>Caris+ Technologies</span> All Rights Reserved.</p>
+        <p className="text-gray-400  text-xs  text-center leading-loose py-2">
+          Copyright © 2025{" "}
+          <span className="text-white cursor-pointer hover:text-[#c5832b] ">
+            Caris+ Technologies
+          </span>{" "}
+          All Rights Reserved.
+        </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

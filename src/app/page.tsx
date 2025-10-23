@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 
 import React from "react";
 import NavigationBar from "@/components/ui/mainNavBar";
@@ -8,11 +7,9 @@ import Footer from "@/components/ui/footer";
 import ScrollToTop from "@/components/ui/scrollToTop";
 
 export default function Home() {
-
-
   return (
     <div>
-      <ScrollToTop/>
+      <ScrollToTop />
       <NavigationBar />
 
       <section id="home">
@@ -41,7 +38,7 @@ export default function Home() {
         <CTA />
       </section>
 
-      <Footer/>
+      <Footer />
     </div>
   );
 }
