@@ -17,11 +17,11 @@ interface UserData {
 const ParentDashboard = () => {
   const { userId } = useParams();
   // const [user, setUser] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
 
 
-  if (loading) return <p className="text-center mt-10 grid place-items-center h-screen">Loading dashboard...</p>;
+  // if (loading) return <p className="text-center mt-10 grid place-items-center h-screen">Loading dashboard...</p>;
 
   const cardData = [
     {
