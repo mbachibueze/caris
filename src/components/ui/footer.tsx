@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const Footer = () => {
@@ -6,8 +7,14 @@ const Footer = () => {
       <div className="  w-[90%] mx-auto text-white  pt-15  pb-1 ">
         <div className="grid lg:grid-cols-3 gap-10 grid-cols-1 justify-between mb-5">
           <div className="flex flex-col gap-2">
-            <div className="font-bold text-2xl uppercase text-[#327cff] flex">
-              Caris <p className="font-bold text-[#1446e1] ">+</p>
+            <div className="font-bold text-2xl   flex items-center gap-2 mb-2">
+              <Image
+                src='whiteLogo.svg'
+                alt="CareTrack Logo"
+                width={20}
+                height={20}
+              />
+              CareTrack
             </div>
             <p className="text-sm leading-relaxed text-gray-300">
               VaccinateEase bridges the gap between parents and healthcare

@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const SignIN = () => {
   const router = useRouter();
@@ -12,57 +13,99 @@ const SignIN = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+    setMessage("");
 
     try {
-      const q = query(
-        collection(db, "users"),
-        where("email", "==", email),
-        where("password", "==", password),
+      // Attempt sign-in
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
       );
+      const user = userCredential.user;
 
+      // Check if email is verified
+      if (!user.emailVerified) {
+        await signOut(auth);
+        setMessage("Please verify your email before signing in.");
+        setLoading(false);
+        return;
+      }
+
+      // Fetch the user's role from Firestore
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("uid", "==", user.uid));
       const querySnapshot = await getDocs(q);
 
-      if (!querySnapshot.empty) {
-        const userDoc = querySnapshot.docs[0];
-        const userId = userDoc.id;
-        const userData = userDoc.data(); // ✅ extract the actual user data
-
-        alert(
-          `User ID: ${userId}\nEmail: ${userData.email}\nPassword: ${userData.password}`,
-        );
-
-        console.log("Fetched user data:", userData);
-
-        localStorage.setItem("justLoggedIn", "true");
-        router.push(`/parent/dashboard/${userId}`);
-
-        alert(`Welcome ${userData.firstName || "User"}!`);
-      } else {
-        setError("Invalid email or password");
+      if (querySnapshot.empty) {
+        setError("User record not found in database.");
+        setLoading(false);
+        return;
       }
-    } catch (err) {
+
+      // Extract role from the Firestore document
+      const userData = querySnapshot.docs[0].data();
+      const userRole = userData.role;
+
+      // Store user info locally
+      localStorage.setItem("userId", user.uid);
+      localStorage.setItem("userEmail", user.email || "");
+      localStorage.setItem("userRole", userRole || "");
+      localStorage.setItem("justLoggedIn", "true");
+
+      // Redirect based on role
+      if (userRole === "parent") {
+        router.push(`/parent/dashboard/${user.uid}`);
+      } else if (userRole === "doctor") {
+        router.push(`/doctor/dashboard/${user.uid}`);
+      } else {
+        setError("No account found with this email. Please sign up.");
+      }
+
+      setMessage("Logged in successfully!");
+    } catch (err: unknown) {
       console.error("Error logging in:", err);
-      setError("Something went wrong. Please try again.");
+
+      if (typeof err === "object" && err !== null && "code" in err) {
+        const firebaseError = err as { code: string; message?: string };
+
+        if (firebaseError.code === "auth/user-not-found") {
+          setError("No account found with this email. Please sign up.");
+        } else if (firebaseError.code === "auth/wrong-password") {
+          setError("Incorrect password. Please try again.");
+        } else if (firebaseError.code === "auth/invalid-email") {
+          setError("Invalid email address. Please check your input.");
+        } else if (firebaseError.code === "auth/too-many-requests") {
+          setError("Too many failed attempts. Please try again later.");
+        } else {
+          setError("Something went wrong. Please try again.");
+        }
+      } else {
+        // Fallback for unexpected error structures
+        setError("Unexpected error occurred. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  /* eslint-disable react/no-unescaped-entities */
+
+     /* eslint-disable react/no-unescaped-entities */
   return (
     <main className="bg-[#1739b6] h-screen w-screen grid place-items-center relative">
       <Link
         href="/"
         className="absolute text-sm text-gray-200 underline cursor-pointer top-0 left-0 p-2"
       >
-        <div className="">Back to Home</div>
+        <div>Back to Home</div>
       </Link>
-      <div className="bg-white rounded-2xl p-5 w-fit">
+      <div className="bg-white rounded-2xl p-5 w-70 [&_input]:w-full ">
         <fieldset id="sign_in">
           <legend className="font-bold text-2xl uppercase text-[#1739b6] text-center mb-5">
             Caris+
@@ -91,12 +134,6 @@ const SignIN = () => {
               />
             </div>
 
-            <div className="flex items-center text-sm mx-auto w-fit mb-3 ">
-              <label>
-                <input type="checkbox" /> Remember me{" "}
-              </label>
-            </div>
-
             <div className="flex flex-col gap-3 text-center mt-3">
               <button
                 type="submit"
@@ -107,7 +144,14 @@ const SignIN = () => {
               </button>
             </div>
 
-            {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
+            {error && (
+              <p className="text-red-500 mt-2 text-xs text-center">{error}</p>
+            )}
+            {message && (
+              <p className="text-blue-500 mt-2 text-xs text-center">
+                {message}
+              </p>
+            )}
           </form>
         </fieldset>
 

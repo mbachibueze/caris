@@ -4,7 +4,7 @@ import React from "react";
 const Schedule = () => {
   return (
     <div>
-      <DashboardNav title="Schedule" />
+      <DashboardNav title="Appointments" />
       <h1 className="font-semibold text-lg ">Schedule</h1>
     </div>
   );

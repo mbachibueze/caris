@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -24,7 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable}  antialiased bg-[#ffffff]`}>
+      <body className={cn(
+          " antialised bg-[#ffffff] ",
+          poppins.className,
+          { "debug-screens": process.env.NODE_ENV === "development" }
+        )}>
         {children}
       </body>
     </html>

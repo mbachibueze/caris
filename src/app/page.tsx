@@ -2,7 +2,13 @@
 
 import React from "react";
 import NavigationBar from "@/components/ui/mainNavBar";
-import { CTA, Doctors, Hero, Service, Special } from "@/components/ui/cards";
+import {
+  CTA,
+  Doctors,
+  Hero,
+  Service,
+  Special,
+} from "@/components/ui/homePageComponents";
 import Footer from "@/components/ui/footer";
 import ScrollToTop from "@/components/ui/scrollToTop";
 

@@ -30,7 +30,7 @@ export const Hero: React.FC<HeroProps> = ({
     <div className=" lg:h-[99vh]  md:py-24 py-14  relative transition-all duration-1000">
       <div className="lg:grid lg:grid-cols-2 gap-2 flex flex-col  justify-between items-center  w-[90%]  m-auto m text-[#0d1321]  ">
         <div className=" flex flex-col gap-3">
-          <h5 className="text-lg font-medium text-[#327cff]">
+          <h5 className=" font-medium text-[#327cff]">
             Healthy <span className="text-black">Living, Made</span> Easy
           </h5>
           <div className="flex flex-col gap-2">
@@ -38,7 +38,7 @@ export const Hero: React.FC<HeroProps> = ({
               {head} <span className="text-[#327cff]">{head2}</span>{" "}
             </h1>
 
-            <p className="lg:text-lg w-[100%] md:text-xl sm:text-lg  leading-relaxed lg:w-[90%] font-medium">
+            <p className=" w-[100%]   leading-relaxed lg:w-[90%] font-medium">
               {description}
             </p>
           </div>
@@ -103,7 +103,7 @@ export const Special = () => {
           <div className=" flex flex-col gap-2 py-5 p-3 text-center md:text-left items-center sm:items-start">
             <div className="flex flex-col gap-2">
               <h3 className="text-xl font-semibold text-center">About us</h3>
-              <h1 className="capitalize font-bold md:text-5xl text-3xl">
+              <h1 className="capitalize font-bold md:text-4xl text-3xl">
                 What makes us special{" "}
               </h1>
               <p className="text-gray-600 font-medium md:text-base text-sm">
@@ -303,7 +303,7 @@ export const Doctors = () => {
 export const CTA = () => {
   return (
     <div className="w-[90%] mx-auto bg-[#bcdaff] text-center my-15 rounded-lg p-10 py-20 flex flex-col gap-5 items-center">
-      <h1 className="font-bold lg:text-6xl md:text-5xl text-3xl">
+      <h1 className="font-bold lg:text-5xl md:text-5xl text-3xl">
         Protect your{" "}
         <span className="text-[#327cff]">child’s future — one vaccine</span> at
         a time.

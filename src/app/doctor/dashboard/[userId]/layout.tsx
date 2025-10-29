@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useParams } from "next/navigation";
-import ParentSidebar from "./sideBar";
+import DoctorSidebar from "./sideBar";
 
 export default function DashboardLayout({
   children,
@@ -15,7 +15,7 @@ export default function DashboardLayout({
     <div className="min-h-screen flex w-full box-border">
       {/* Sidebar container */}
       <div className="relative z-50">
-        <ParentSidebar userId={userId as string} />
+        <DoctorSidebar userId={userId as string} />
       </div>
 
       {/* Scrollable main area */}

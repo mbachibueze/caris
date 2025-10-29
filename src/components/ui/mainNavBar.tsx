@@ -5,6 +5,7 @@ import React from "react";
 import Link from "next/link";
 import { CiMenuFries } from "react-icons/ci";
 import { IoMdClose } from "react-icons/io";
+import Image from "next/image";
 
 const NavigationBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,8 +63,15 @@ const NavigationBar = () => {
       <div className="fixed z-10 w-full backdrop-blur-sm">
         <nav className=" w-[90%]  mx-auto flex justify-between items-center py-2">
           {/* Logo */}
-          <div className="font-bold text-2xl uppercase text-[#327cff] flex">
-            Caris <p className="font-bold text-[#1446e1] ">+</p>
+          <div className="font-bold text-xl  text-[#327cff] flex items-center gap-2">
+            <Image
+              src="/logo.svg"
+              alt="logo"
+              width={20}
+              height={20}
+              className=""
+            />
+            <div className="flex items-center ">CareTrack</div>
           </div>
 
           {/* Navigation Links */}

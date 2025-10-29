@@ -2,55 +2,112 @@
 
 import Link from "next/link";
 import React, { useState } from "react";
-import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
+import { collection, addDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signOut,
+} from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 const SignUP = () => {
+  const router = useRouter();
+
+  // Form states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [role, setRole] = useState(""); // "parent" or "doctor"
+
+  // Feedback states
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Handle sign-up
   const handleSignUP = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setMessage("");
     setLoading(true);
 
-    // Step 1: Validate password match
+    // Validate password
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      setLoading(false);
+      return;
+    }
+
+    // Validate match
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
+      setLoading(false);
+      return;
+    }
+
+    // Validate role selection
+    if (!role) {
+      setError("Please select a role (Parent or Doctor).");
       setLoading(false);
       return;
     }
 
     try {
-      // Step 2: Check if user already exists
-      const q = query(collection(db, "users"), where("email", "==", email));
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        setError("User already exists");
-        setLoading(false);
-        return;
-      }
-
-      // Step 3: Create new user
-      await addDoc(collection(db, "users"), {
+      // Create user with Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
         email,
         password,
-        createdAt: new Date().toISOString(),
+      );
+      const user = userCredential.user;
+
+      // Send verification email
+      await sendEmailVerification(user);
+      await signOut(auth);
+
+      setMessage("Verification email sent. Please check your inbox.");
+      setSuccess("Account created successfully!");
+
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        firstName,
+        lastName,
+        email,
+        role,
+        createdAt: new Date(),
       });
 
-      setSuccess("Account created successfully!");
+      // Reset form
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-    } catch (err) {
-      console.error("Error signing up:", err);
-      setError("Something went wrong. Please try again.");
+      setFirstName("");
+      setLastName("");
+      setRole("");
+
+      // Redirect to sign-in
+      router.push("/signIn");
+    } catch (err: unknown) {
+      if (err instanceof FirebaseError) {
+        console.error("Firebase error:", err.code);
+        if (err.code === "auth/email-already-in-use") {
+          setError("An account with this email already exists.");
+        } else if (err.code === "auth/invalid-email") {
+          setError("Please enter a valid email address.");
+        } else if (err.code === "auth/weak-password") {
+          setError("Password is too weak. Please use at least 8 characters.");
+        } else {
+          setError("Something went wrong. Please try again.");
+        }
+      } else {
+        setError("Unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }
@@ -58,14 +115,31 @@ const SignUP = () => {
 
   return (
     <main className="bg-[#1739b6] h-screen w-screen grid place-items-center">
-      <div className="bg-white rounded-2xl p-5 w-fit">
+      <div className="bg-white rounded-2xl p-5 w-80 md:w-96">
         <fieldset id="sign_up">
           <legend className="font-bold text-2xl uppercase text-[#1739b6] text-center mb-5">
             Caris+
           </legend>
 
           <form onSubmit={handleSignUP}>
-            <div className="flex gap-2 mb-3 justify-between">
+            {/* Input fields */}
+            <div className="flex flex-col gap-2 mb-3 [&_input]:w-full">
+              <input
+                type="text"
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                className="bg-gray-300 outline-none border border-gray-300 rounded px-3 p-2"
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+                className="bg-gray-300 outline-none border border-gray-300 rounded px-3 p-2"
+              />
               <input
                 type="email"
                 placeholder="Email"
@@ -74,9 +148,6 @@ const SignUP = () => {
                 required
                 className="bg-gray-300 outline-none border border-gray-300 rounded px-3 p-2"
               />
-            </div>
-
-            <div className="flex gap-2 mb-3 justify-between">
               <input
                 type="password"
                 placeholder="Password"
@@ -85,9 +156,6 @@ const SignUP = () => {
                 required
                 className="bg-gray-300 outline-none border border-gray-300 rounded px-3 p-2"
               />
-            </div>
-
-            <div className="flex gap-2 mb-3 justify-between">
               <input
                 type="password"
                 placeholder="Confirm Password"
@@ -98,12 +166,33 @@ const SignUP = () => {
               />
             </div>
 
-            <div className="flex items-center text-sm mx-auto w-fit mb-3">
-              <label>
-                <input type="checkbox" /> Remember me
-              </label>
+            {/* Role buttons */}
+            <div className="flex justify-between gap-2 mb-3">
+              <button
+                type="button"
+                onClick={() => setRole("parent")}
+                className={`shadow p-2 w-full rounded cursor-pointer ${
+                  role === "parent"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-black"
+                }`}
+              >
+                Parent
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole("doctor")}
+                className={`shadow p-2 w-full rounded cursor-pointer ${
+                  role === "doctor"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-black"
+                }`}
+              >
+                Doctor
+              </button>
             </div>
 
+            {/* Submit button */}
             <div className="flex flex-col gap-3 text-center mt-3">
               <button
                 type="submit"
@@ -114,12 +203,18 @@ const SignUP = () => {
               </button>
             </div>
 
+            {/* Feedback messages */}
             {error && (
               <p className="text-red-500 mt-2 text-xs text-center">{error}</p>
             )}
             {success && (
               <p className="text-green-500 mt-2 text-xs text-center">
                 {success}
+              </p>
+            )}
+            {message && (
+              <p className="text-blue-500 mt-2 text-xs text-center">
+                {message}
               </p>
             )}
           </form>
