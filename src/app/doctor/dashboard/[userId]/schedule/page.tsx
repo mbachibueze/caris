@@ -25,7 +25,6 @@ interface Appointment {
   parentUid: string;
   parentName: string;
   doctorUid: string;
-  doctorName: string;
   vaccination: string;
   appointmentDate: string;
   appointmentTime: string;
@@ -190,7 +189,7 @@ const Schedule = () => {
                     {appointment.childName}
                   </h2>
                   <p>
-                    <strong>Doctor:</strong> {appointment.doctorName}
+                    <strong>Parent:</strong> {appointment.parentName}
                   </p>
                   <p>
                     <strong>Vaccination:</strong> {appointment.vaccination}

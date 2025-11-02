@@ -14,7 +14,7 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen flex w-full box-border">
       {/* Sidebar container */}
-      <div className="relative z-50">
+      <div className="relative z-50 ">
         <ParentSidebar userId={userId as string} />
       </div>
 

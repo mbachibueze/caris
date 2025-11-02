@@ -33,7 +33,7 @@ interface History {
 const History = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [historyData, setHistoryData] = useState<History[]>([]);
-
+  // const [loading, setLoading] = useState(true);
 
   const pathname = usePathname();
   const isParentPage = pathname.includes("parent");
@@ -86,7 +86,15 @@ const History = () => {
     return () => unsubscribe();
   }, [userId]);
 
-
+  // ✅ Loading state
+  // if (loading) {
+  //   return (
+  //     <div>
+  //       <DashboardNav title="History" />
+  //       <div className="p-6 text-center text-gray-500">Loading history...</div>
+  //     </div>
+  //   );
+  // }
 
   // ✅ Empty state
   if (historyData.length === 0) {
@@ -104,7 +112,7 @@ const History = () => {
   return (
     <div>
       <DashboardNav title="History" />
-      <main className=" space-y-4">
+      <main className="p-4 space-y-4">
         <h1 className="font-semibold text-xl text-[#142257] mb-3">
           Completed Vaccinations
         </h1>
@@ -159,14 +167,15 @@ const History = () => {
               </p>
 
               <p>
-                <strong>Done:</strong> {record.completedAt}
+                <strong>Completed At:</strong> {record.completedAt}
               </p>
 
-              <p className=" flex ">
+              <p>
+                <strong>Status:</strong>{" "}
                 <span
-                  className={`glass4 px-6 capitalize ml-auto font-medium ${
+                  className={`capitalize font-medium ${
                     record.status === "completed"
-                      ? "text-white"
+                      ? "text-green-700"
                       : "text-gray-500"
                   }`}
                 >

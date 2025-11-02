@@ -9,7 +9,7 @@ const Footer = () => {
           <div className="flex flex-col gap-2">
             <div className="font-bold text-2xl   flex items-center gap-2 mb-2">
               <Image
-                src='whiteLogo.svg'
+                src="whiteLogo.svg"
                 alt="CareTrack Logo"
                 width={20}
                 height={20}

@@ -86,6 +86,15 @@
   border: 1px solid rgba(50, 124, 255, 0.3);
 }
 
+.glass4 {
+  background: rgba(12, 85, 14, 0.54);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2.3px);
+  -webkit-backdrop-filter: blur(2.3px);
+  border: 1px solid rgba(12, 85, 14, 0.3);
+}
+
 @layer components {
   .input {
     @apply w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none;

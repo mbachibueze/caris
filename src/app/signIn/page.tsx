@@ -95,8 +95,7 @@ const SignIN = () => {
     }
   };
 
-
-     /* eslint-disable react/no-unescaped-entities */
+  /* eslint-disable react/no-unescaped-entities */
   return (
     <main className="bg-[#1739b6] h-screen w-screen grid place-items-center relative">
       <Link

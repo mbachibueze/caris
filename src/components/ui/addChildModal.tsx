@@ -2,7 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { db, auth } from "@/lib/firebase";
-import { doc, setDoc, collection, serverTimestamp, query, getDocs, where } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  collection,
+  serverTimestamp,
+  query,
+  getDocs,
+  where,
+} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { IoMdClose } from "react-icons/io";
 import { v4 as uuidv4 } from "uuid";
@@ -44,8 +52,6 @@ const AddChildModal = ({ onClose }: { onClose: () => void }) => {
     setChildData({ ...childData, [e.target.name]: e.target.value });
   };
 
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -57,7 +63,6 @@ const AddChildModal = ({ onClose }: { onClose: () => void }) => {
     setLoading(true);
 
     try {
-      
       // Step 1: Get parent document from Firestore
       const usersRef = collection(db, "users");
       const q = query(usersRef, where("uid", "==", userId));
@@ -67,12 +72,11 @@ const AddChildModal = ({ onClose }: { onClose: () => void }) => {
       let parentName = "Unknown Parent";
 
       querySnapshot.forEach((doc) => {
-      const userData = doc.data();
-      const first = userData.firstname || userData.firstName || "";
-      const last = userData.lastname || userData.lastName || "";
-      parentName = `${first} ${last}`.trim();
-    });
-
+        const userData = doc.data();
+        const first = userData.firstname || userData.firstName || "";
+        const last = userData.lastname || userData.lastName || "";
+        parentName = `${first} ${last}`.trim();
+      });
 
       const childId = uuidv4();
 
@@ -80,15 +84,15 @@ const AddChildModal = ({ onClose }: { onClose: () => void }) => {
         ...childData,
         // photoURL: photoURL || "",
         parentUid: userId,
-        parentName, 
+        parentName,
         createdAt: serverTimestamp(),
       };
 
       // ✅ Write to global children collection
       await setDoc(doc(db, "children", childId), childDocData);
 
-      // ✅ Write to user's subcollection (same ID)
-      await setDoc(doc(db, "users", userId, "children", childId), childDocData);
+      // // ✅ Write to user's subcollection (same ID)
+      // await setDoc(doc(db, "users", userId, "children", childId), childDocData);
 
       console.log("✅ Successfully written to:");
       console.log(`children/${childId}`);
@@ -153,7 +157,12 @@ const AddChildModal = ({ onClose }: { onClose: () => void }) => {
             className="input"
             required
           />
-          <select required name="bloodGroup" onChange={handleChange} className="input">
+          <select
+            required
+            name="bloodGroup"
+            onChange={handleChange}
+            className="input"
+          >
             <option value="">Select Blood Group</option>
             <option>O+</option>
             <option>A+</option>
@@ -199,7 +208,12 @@ const AddChildModal = ({ onClose }: { onClose: () => void }) => {
             className="input"
             required
           />
-          <select required name="deliveryType" onChange={handleChange} className="input">
+          <select
+            required
+            name="deliveryType"
+            onChange={handleChange}
+            className="input"
+          >
             <option value="">Delivery Type</option>
             <option>Normal</option>
             <option>Caesarean Section</option>

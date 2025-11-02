@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { CiSearch } from "react-icons/ci";
+import { CiMenuFries, CiSearch } from "react-icons/ci";
 import { IoNotifications } from "react-icons/io5";
 import { useParams } from "next/navigation";
 import { db } from "@/lib/firebase";
@@ -97,6 +97,14 @@ const DashboardNav = ({ title }: Props) => {
             height={40}
             className="bg-red-400 rounded-full border cursor-pointer border-gray-400 shadow"
           />
+        </div>
+        <div
+          className="
+            ml-2 text-xl p-1 rounded-lg bg-white/10 cursor-pointer border-gray-400 font-bold border 
+            hover:border-dashed hover:text-[#1739b6] hover:border-[#1739b6] hover:bg-white/20 lg:hidden
+            transition-all duration-300 ease-in-out"
+        >
+          <CiMenuFries size={20} />
         </div>
       </main>
     </nav>

@@ -9,11 +9,8 @@ import ChildDetailsModal from "@/components/ui/childDetailModal";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChildData } from "@/types/child";
 
-
-
-
 const Children = () => {
-  const [children, setChildren] = useState<ChildData[]>([]); 
+  const [children, setChildren] = useState<ChildData[]>([]);
   const [selectedChild, setSelectedChild] = useState<ChildData | null>(null);
 
   useEffect(() => {
@@ -30,11 +27,27 @@ const Children = () => {
     return () => unsubscribe();
   }, []);
 
+  // const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const filterValue = event.target.value;
+  //   setGlobalFilter(filterValue);
+  //   // Apply filtering logic
+  //   setChildren((prevChildren) =>
+  //     prevChildren.filter((child) =>
+  //       child.name.toLowerCase().includes(filterValue.toLowerCase())
+  //     )
+  //   );-
+  // };
+
   return (
     <div>
       <DashboardNav title="Children" />
 
-      <div className="flex flex-col gap-2 p-2 ">
+      <div className="flex flex-col gap-2">
+        {/* <Input
+          placeholder="Filter Users. . ."
+          // onChange={handleFilterChange}
+          className="w-50 outline-none focus:outline-none"
+        /> */}
         <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-2">
           <AnimatePresence>
             {children.map((child) => (

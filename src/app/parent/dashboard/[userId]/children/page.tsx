@@ -10,9 +10,6 @@ import DashboardNav from "@/components/ui/dashboardNav";
 import { AnimatePresence } from "framer-motion";
 import { ChildData } from "@/types/child";
 
-
-
-
 const Children = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [children, setChildren] = useState<ChildData[]>([]);

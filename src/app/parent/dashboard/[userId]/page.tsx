@@ -1,25 +1,14 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+
 import DashboardNav from "@/components/ui/dashboardNav";
 import Card from "@/components/ui/cardComponent";
 import { CalendarCheck, CalendarClock, Users } from "lucide-react";
 
-
-interface UserData {
-  email: string;
-  createdAt: number | string;
-}
-
 const ParentDashboard = () => {
-  const { userId } = useParams();
+
   // const [user, setUser] = useState<UserData | null>(null);
   // const [loading, setLoading] = useState(true);
-
-
 
   // if (loading) return <p className="text-center mt-10 grid place-items-center h-screen">Loading dashboard...</p>;
 
@@ -77,7 +66,6 @@ const ParentDashboard = () => {
           <div className="w-full h-44 mt-4">{/* <MyChildren /> */}</div>
         </div>
       </div>
-
     </main>
   );
 };
