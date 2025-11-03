@@ -32,16 +32,16 @@ const Footer = () => {
             </h2>
 
             <div
-              className="flex items-center gap-2
-             bg-white w-fit p-1 rounded-full text-gray-800"
+              className="flex  items-center gap-2
+              w-fit p-1 rounded-full text-gray-800 bg-white sm:text-base text-sm"
             >
               <input
                 type="text"
                 placeholder="Enter email"
-                className="outline-none p-2 px-4 rounded-full"
+                className="outline-none p-2 px-4 rounded-full w-[90%] lg:w-full"
               />
               <button
-                className="bg-[#1739b6] rounded-full px-6 text-white p-2 cursor-pointer border hover:
+                className="bg-[#1739b6] rounded-full px-6 text-white p-2 cursor-pointer border  
               "
               >
                 Subscribe
@@ -49,7 +49,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className=" lg:col-span-2 flex lg:justify-around justify-between  ">
+          <div className=" lg:col-span-2 gap-1 flex lg:justify-around justify-between  ">
             <div className="flex flex-col gap-2">
               <h5 className="font-semibold">Services</h5>
               <ul className="space-y-2 text-gray-300 lg:text-lg sm:text-base text-xs">
