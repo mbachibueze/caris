@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
@@ -14,23 +14,40 @@ const SignIN = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  // ✅ Load last used email if remembered
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
+      setRememberMe(true);
+    }
+
+    // Autofocus email input
+    emailRef.current?.focus();
+  }, []);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
     setMessage("");
+    setLoading(true);
 
     try {
-      // Attempt sign-in
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Check if email is verified
+      // ✅ Save or remove email based on "Remember Me"
+      if (rememberMe) {
+        localStorage.setItem("rememberedEmail", email);
+      } else {
+        localStorage.removeItem("rememberedEmail");
+      }
+
+      // Check email verification
       if (!user.emailVerified) {
         await signOut(auth);
         setMessage("Please verify your email before signing in.");
@@ -38,7 +55,7 @@ const SignIN = () => {
         return;
       }
 
-      // Fetch the user's role from Firestore
+      // Fetch user role
       const usersRef = collection(db, "users");
       const q = query(usersRef, where("uid", "==", user.uid));
       const querySnapshot = await getDocs(q);
@@ -49,17 +66,16 @@ const SignIN = () => {
         return;
       }
 
-      // Extract role from the Firestore document
       const userData = querySnapshot.docs[0].data();
       const userRole = userData.role;
 
-      // Store user info locally
+      // Store info locally
       localStorage.setItem("userId", user.uid);
       localStorage.setItem("userEmail", user.email || "");
       localStorage.setItem("userRole", userRole || "");
       localStorage.setItem("justLoggedIn", "true");
 
-      // Redirect based on role
+      // Redirect
       if (userRole === "parent") {
         router.push(`/parent/dashboard/${user.uid}`);
       } else if (userRole === "doctor") {
@@ -75,19 +91,23 @@ const SignIN = () => {
       if (typeof err === "object" && err !== null && "code" in err) {
         const firebaseError = err as { code: string; message?: string };
 
-        if (firebaseError.code === "auth/user-not-found") {
-          setError("No account found with this email. Please sign up.");
-        } else if (firebaseError.code === "auth/wrong-password") {
-          setError("Incorrect password. Please try again.");
-        } else if (firebaseError.code === "auth/invalid-email") {
-          setError("Invalid email address. Please check your input.");
-        } else if (firebaseError.code === "auth/too-many-requests") {
-          setError("Too many failed attempts. Please try again later.");
-        } else {
-          setError("Something went wrong. Please try again.");
+        switch (firebaseError.code) {
+          case "auth/user-not-found":
+            setError("No account found with this email. Please sign up.");
+            break;
+          case "auth/wrong-password":
+            setError("Incorrect password. Please try again.");
+            break;
+          case "auth/invalid-email":
+            setError("Invalid email address. Please check your input.");
+            break;
+          case "auth/too-many-requests":
+            setError("Too many failed attempts. Please try again later.");
+            break;
+          default:
+            setError("Something went wrong. Please try again.");
         }
       } else {
-        // Fallback for unexpected error structures
         setError("Unexpected error occurred. Please try again.");
       }
     } finally {
@@ -95,7 +115,6 @@ const SignIN = () => {
     }
   };
 
-  /* eslint-disable react/no-unescaped-entities */
   return (
     <main className="bg-[#1739b6] h-screen w-screen grid place-items-center relative">
       <Link
@@ -113,6 +132,7 @@ const SignIN = () => {
           <form onSubmit={handleSignIn}>
             <div className="flex gap-2 mb-3 justify-between">
               <input
+                ref={emailRef}
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -133,6 +153,22 @@ const SignIN = () => {
               />
             </div>
 
+            {/* ✅ Remember Me
+            <div className="flex border   items-center gap-2 mb-3">
+              <div className="flex items-center border w-full">
+                <input
+                  type="checkbox"
+                  id="rememberMe"
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
+                  className="cursor-pointer w-fit border " 
+                />
+                <p  className="text-xs flex text-gray-700 cursor-pointer">
+                  Remember Me
+                </p>
+              </div>
+            </div> */}
+
             <div className="flex flex-col gap-3 text-center mt-3">
               <button
                 type="submit"
@@ -143,14 +179,8 @@ const SignIN = () => {
               </button>
             </div>
 
-            {error && (
-              <p className="text-red-500 mt-2 text-xs text-center">{error}</p>
-            )}
-            {message && (
-              <p className="text-blue-500 mt-2 text-xs text-center">
-                {message}
-              </p>
-            )}
+            {error && <p className="text-red-500 mt-2 text-xs text-center">{error}</p>}
+            {message && <p className="text-blue-500 mt-2 text-xs text-center">{message}</p>}
           </form>
         </fieldset>
 
