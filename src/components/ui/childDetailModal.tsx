@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { usePathname } from "next/navigation";
+import emailjs from "emailjs-com";
 
 interface ChildDetails {
   id?: string;
@@ -82,29 +83,83 @@ export default function ChildDetailsModal({
   }, [isDoctorPage]);
 
   // ✅ Handle delete (for parent)
-  const handleDelete = async () => {
-    if (!userId || !child.id) {
-      alert("Missing user or child ID.");
-      return;
-    }
+const handleDelete = async () => {
+  if (!userId || !child.id) {
+    alert("Missing user or child ID.");
+    return;
+  }
 
-    const confirmDelete = confirm(
-      `Are you sure you want to delete ${child.childName}'s record?`,
+  const confirmDelete = confirm(
+    `Are you sure you want to delete ${child.childName}'s record from the system?`,
+  );
+  if (!confirmDelete) return;
+
+  setLoading(true);
+
+  try {
+    // --- 1. Delete from children collection
+    await deleteDoc(doc(db, "children", child.id));
+
+    // --- 2. Delete any appointments for this child
+    const appointmentsQuery = query(
+      collection(db, "appointments"),
+      where("childId", "==", child.id)
     );
-    if (!confirmDelete) return;
+    const appointmentsSnapshot = await getDocs(appointmentsQuery);
+    const appointmentDeletes = appointmentsSnapshot.docs.map((docSnap) =>
+      deleteDoc(doc(db, "appointments", docSnap.id))
+    );
+    await Promise.all(appointmentDeletes);
 
-    setLoading(true);
+    // --- 3. Delete any history entries for this child
+    const historyQuery = query(
+      collection(db, "history"),
+      where("childId", "==", child.id)
+    );
+    const historySnapshot = await getDocs(historyQuery);
+    const historyDeletes = historySnapshot.docs.map((docSnap) =>
+      deleteDoc(doc(db, "history", docSnap.id))
+    );
+    await Promise.all(historyDeletes);
+
+    alert(`${child.childName}'s record has been fully deleted from the system.`);
+    onClose();
+  } catch (error) {
+    console.error("🔥 Error deleting child:", error);
+    alert("Failed to delete child completely. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+    // ✅ EmailJS helper
+  const sendAppointmentEmail = async () => {
     try {
-      await deleteDoc(doc(db, "children", child.id));
-      await deleteDoc(doc(db, "users", userId, "children", child.id));
-
-      alert(`${child.childName}'s record deleted successfully.`);
-      onClose();
-    } catch (error) {
-      console.error("🔥 Error deleting child:", error);
-      alert("Failed to delete record. Please try again.");
-    } finally {
-      setLoading(false);
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          to_email: child.parentEmail || "mbachibueze20@gmail.com",
+          parent_name: child.parentName,
+          doctor_name: doctorName,
+          child_name: child.childName,
+          vaccination,
+          appointment_date: new Date(appointmentDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+          appointment_time: new Date(`1970-01-01T${appointmentTime}:00`).toLocaleTimeString(
+            "en-US",
+            { hour: "numeric", minute: "2-digit", hour12: true }
+          ),
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+      );
+      console.log("✅ Email notification sent successfully.");
+    } catch (err) {
+      console.error("❌ Failed to send email:", err);
     }
   };
 
@@ -136,8 +191,10 @@ export default function ChildDetailsModal({
         status: "scheduled",
       });
 
+      await sendAppointmentEmail();
+
       alert(
-        `Appointment for ${child.parentName}'s child ${child.childName} has been scheduled successfully by ${doctorName}.`,
+        `Appointment for ${child.parentName}'s child ${child.childName} has been scheduled successfully`,
       );
 
       setShowAppointmentForm(false);
@@ -151,6 +208,8 @@ export default function ChildDetailsModal({
     } finally {
       setLoading(false);
     }
+
+
   };
 
   return (

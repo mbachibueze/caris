@@ -6,17 +6,14 @@ import {
   collection,
   onSnapshot,
   deleteDoc,
-  addDoc,
   doc,
-  updateDoc,
-  getDocs,
   query,
   where,
 } from "firebase/firestore";
 import { db, auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { usePathname } from "next/navigation";
-import { Trash2 } from "lucide-react"; // ✅ Delete icon
+import { Trash2 } from "lucide-react";
 
 interface Appointment {
   id: string;
@@ -34,88 +31,49 @@ interface Appointment {
   createdAt?: string;
 }
 
-const Schedule = () => {
+const ParentsSchedule = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [doctorUid, setDoctorUid] = useState<string | null>(null);
-  const [doctorName, setDoctorName] = useState<string | null>(null);
+  const [parentUid, setParentUid] = useState<string | null>(null);
 
   const pathname = usePathname();
   const isParentPage = pathname.includes("parent");
-  const isDoctorPage = pathname.includes("doctor");
 
-  // ✅ Track logged-in doctor and fetch their name
+  // ✅ Get logged-in parent UID
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setDoctorUid(user.uid);
-
-        const q = query(collection(db, "users"), where("uid", "==", user.uid));
-        const snapshot = await getDocs(q);
-
-        if (!snapshot.empty) {
-          const userData = snapshot.docs[0].data();
-          if (userData.role === "doctor") {
-            const fullName = `Dr ${userData.lastName || ""} ${
-              userData.firstName || ""
-            }`.trim();
-            setDoctorName(fullName);
-            localStorage.setItem("userRole", userData.role);
-          }
-        }
+        setParentUid(user.uid);
       }
     });
-
     return unsubscribeAuth;
   }, []);
 
-  // ✅ Fetch appointments in real-time
+  // ✅ Fetch appointments only for this parent
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, "appointments"), (snapshot) => {
-      const allAppointments = snapshot.docs.map((doc) => ({
+    if (!parentUid) return;
+
+    const appointmentsQuery = query(
+      collection(db, "appointments"),
+      where("parentUid", "==", parentUid) // filter by parent
+    );
+
+    const unsub = onSnapshot(appointmentsQuery, (snapshot) => {
+      const parentAppointments = snapshot.docs.map((doc) => ({
         ...(doc.data() as Appointment),
         id: doc.id,
       }));
-      setAppointments(allAppointments);
+      setAppointments(parentAppointments);
       setLoading(false);
     });
 
     return () => unsub();
-  }, []);
-
-  // ✅ Handle completion
-  const handleComplete = async (appointment: Appointment) => {
-    const confirmAction = confirm(
-      `Mark appointment for ${appointment.childName} as completed?`,
-    );
-    if (!confirmAction) return;
-
-    try {
-      const completedAppointment = {
-        ...appointment,
-        status: "completed",
-        completedAt: new Date().toISOString(),
-        completedBy: doctorUid,
-        completedByName: doctorName,
-      };
-
-      await addDoc(collection(db, "history"), completedAppointment);
-      await updateDoc(doc(db, "appointments", appointment.id), {
-        status: "completed",
-      });
-      await deleteDoc(doc(db, "appointments", appointment.id));
-
-      alert("Appointment marked as completed and moved to history.");
-    } catch (error) {
-      console.error("🔥 Error marking as completed:", error);
-      alert("Error marking appointment as completed.");
-    }
-  };
+  }, [parentUid]);
 
   // ✅ Handle delete appointment
   const handleDelete = async (appointmentId: string, childName: string) => {
     const confirmDelete = confirm(
-      `Are you sure you want to cancel ${childName}'s appointment?`,
+      `Are you sure you want to cancel ${childName}'s appointment?`
     );
     if (!confirmDelete) return;
 
@@ -140,7 +98,7 @@ const Schedule = () => {
     <div>
       <DashboardNav title="Appointments" />
 
-      <main className="space-y-4 ">
+      <main className="space-y-4">
         <h1 className="font-semibold text-xl text-[#142257] mb-3">
           Scheduled Appointments
         </h1>
@@ -153,7 +111,7 @@ const Schedule = () => {
           <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3">
             {appointments.map((appointment) => {
               const formattedDate = new Date(
-                appointment.appointmentDate,
+                appointment.appointmentDate
               ).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
@@ -161,7 +119,7 @@ const Schedule = () => {
               });
 
               const fullDateTime = new Date(
-                `${appointment.appointmentDate}T${appointment.appointmentTime}`,
+                `${appointment.appointmentDate}T${appointment.appointmentTime}`
               );
 
               const formattedTime = fullDateTime.toLocaleTimeString("en-US", {
@@ -175,7 +133,7 @@ const Schedule = () => {
                   key={appointment.id}
                   className="relative bg-white rounded-lg w-full flex flex-col shadow-md p-4 hover:shadow-lg transition cursor-pointer [&_p]:text-sm"
                 >
-                  {/* ✅ Delete icon */}
+                  {/* Delete icon */}
                   <button
                     onClick={() =>
                       handleDelete(appointment.id, appointment.childName)
@@ -220,15 +178,6 @@ const Schedule = () => {
                       {appointment.status}
                     </span>
                   </p>
-
-                  {isDoctorPage && (
-                    <button
-                      onClick={() => handleComplete(appointment)}
-                      className="border mt-3 ml-auto w-fit cursor-pointer text-sm px-3 py-1 rounded-full glass3"
-                    >
-                      Mark as Completed
-                    </button>
-                  )}
                 </div>
               );
             })}
@@ -239,4 +188,4 @@ const Schedule = () => {
   );
 };
 
-export default Schedule;
+export default ParentsSchedule;
