@@ -153,8 +153,8 @@ const SignIN = () => {
               />
             </div>
 
-            {/* ✅ Remember Me
-            <div className="flex border   items-center gap-2 mb-3">
+            {/* ✅ Remember Me */}
+            {/* <div className="flex border   items-center gap-2 mb-3">
               <div className="flex items-center border w-full">
                 <input
                   type="checkbox"
@@ -188,6 +188,7 @@ const SignIN = () => {
           Forgot Password?
         </p>
         <p className="text-xs text-center text-gray-500 mt-2">
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
           Don't have an account?{" "}
           <Link href="/signUp" className="text-blue-700 cursor-pointer">
             Sign Up
