@@ -37,7 +37,7 @@ const ParentDashboard = () => {
     <main className="min-h-screen flex flex-col ">
       <DashboardNav title="dashboard" />
 
-      <div className="flex flex-col gap-3 ">
+      <div className=" flex flex-col gap-3 ">
         {/* Cards */}
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-[#1739b6]"> </h1>
