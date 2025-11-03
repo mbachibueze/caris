@@ -14,11 +14,12 @@ const poppins = Poppins({
 });
 
 
+
 export const metadata: Metadata = {
   title: "CareTrack – Remote Vaccination & Child Health Management",
   description:
     "CareTrack helps parents and doctors keep children’s vaccinations on track with real‑time tracking, reminders, and history. Monitor, schedule, and manage child health securely online.",
-   keywords: [
+  keywords: [
     "CareTrack",
     "child health",
     "vaccination tracking",
@@ -34,36 +35,20 @@ export const metadata: Metadata = {
       url: "https://caretrack‑25.vercel.app"
     }
   ],
-  creator: "Mba Chibueze",
-  publisher: "Mba Chibueze",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1a1a1a" }
-  ],
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-  },
-  metadataBase: new URL("https://caretrack-25.vercel.app"),
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.svg",
-    apple: "/apple-touch-icon.svg",
-  },
   openGraph: {
     title: "CareTrack – Remote Vaccination & Child Health Management",
-    description: "Manage appointments, track child vaccinations, and simplify workflow efficiently.",
-    url: "https://caretrack-25.vercel.app",
+    description:
+      "CareTrack helps parents and doctors monitor, schedule, and track child vaccinations with ease. Real-time updates, history, reminders, and more.",
     siteName: "CareTrack",
+    url: "https://caretrack-25.vercel.app",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://caretrack-25.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "CareTrack – Monitor Child Vaccinations",
-      },
+        alt: "CareTrack – Monitor Child Vaccinations"
+      }
     ],
-    locale: "en_US",
     type: "website",
   },
   twitter: {
@@ -73,8 +58,14 @@ export const metadata: Metadata = {
       "CareTrack helps parents and doctors monitor, schedule, and track child vaccinations with ease. Real-time updates, history, reminders, and more.",
     images: ["https://caretrack-25.vercel.app/og-image.png"],
   },
-  
+  metadataBase: new URL("https://caretrack-25.vercel.app"),
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.svg"
+  },
 };
+
 
 
 export default function RootLayout({

@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { usePathname } from "next/navigation";
-import emailjs from "emailjs-com";
+
 
 
 interface ChildDetails {
@@ -135,41 +135,6 @@ export default function ChildDetailsModal({
     }
   };
 
-  // ✅ EmailJS helper
-  const sendAppointmentEmail = async () => {
-    try {
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        {
-          to_email: child.parentEmail || "mbachibueze20@gmail.com",
-          parent_name: child.parentName,
-          doctor_name: doctorName,
-          child_name: child.childName,
-          vaccination,
-          appointment_date: new Date(appointmentDate).toLocaleDateString(
-            "en-US",
-            {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            },
-          ),
-          appointment_time: new Date(
-            `1970-01-01T${appointmentTime}:00`,
-          ).toLocaleTimeString("en-US", {
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
-          }),
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
-      );
-      console.log("✅ Email notification sent successfully.");
-    } catch (err) {
-      console.error("❌ Failed to send email:", err);
-    }
-  };
 
   // ✅ Handle appointment creation (for doctor)
   const handleSetAppointment = async () => {
@@ -199,7 +164,6 @@ export default function ChildDetailsModal({
         status: "scheduled",
       });
 
-      await sendAppointmentEmail();
 
       alert(
         `Appointment for ${child.parentName}'s child ${child.childName} has been scheduled successfully`,
