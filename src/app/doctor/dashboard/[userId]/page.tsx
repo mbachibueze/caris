@@ -35,9 +35,18 @@ const DoctorsDashboard = () => {
       completedQuery = query(collection(db, "history"));
     } else {
       // ✅ Parent dashboard: filter by parentId (userId)
-      childrenQuery = query(collection(db, "children"), where("parentId", "==", userId));
-      scheduledQuery = query(collection(db, "appointments"), where("parentId", "==", userId));
-      completedQuery = query(collection(db, "history"), where("parentId", "==", userId));
+      childrenQuery = query(
+        collection(db, "children"),
+        where("parentId", "==", userId),
+      );
+      scheduledQuery = query(
+        collection(db, "appointments"),
+        where("parentId", "==", userId),
+      );
+      completedQuery = query(
+        collection(db, "history"),
+        where("parentId", "==", userId),
+      );
     }
 
     // --- Children snapshot

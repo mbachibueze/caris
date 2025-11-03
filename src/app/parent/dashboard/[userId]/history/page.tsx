@@ -34,7 +34,6 @@ const History = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [historyData, setHistoryData] = useState<History[]>([]);
 
-
   const pathname = usePathname();
   const isParentPage = pathname.includes("parent");
   const isDoctorPage = pathname.includes("doctor");
@@ -85,8 +84,6 @@ const History = () => {
 
     return () => unsubscribe();
   }, [userId]);
-
-
 
   // ✅ Empty state
   if (historyData.length === 0) {

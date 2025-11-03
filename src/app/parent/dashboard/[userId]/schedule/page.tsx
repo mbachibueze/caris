@@ -55,7 +55,7 @@ const ParentsSchedule = () => {
 
     const appointmentsQuery = query(
       collection(db, "appointments"),
-      where("parentUid", "==", parentUid) // filter by parent
+      where("parentUid", "==", parentUid), // filter by parent
     );
 
     const unsub = onSnapshot(appointmentsQuery, (snapshot) => {
@@ -73,7 +73,7 @@ const ParentsSchedule = () => {
   // ✅ Handle delete appointment
   const handleDelete = async (appointmentId: string, childName: string) => {
     const confirmDelete = confirm(
-      `Are you sure you want to cancel ${childName}'s appointment?`
+      `Are you sure you want to cancel ${childName}'s appointment?`,
     );
     if (!confirmDelete) return;
 
@@ -111,7 +111,7 @@ const ParentsSchedule = () => {
           <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3">
             {appointments.map((appointment) => {
               const formattedDate = new Date(
-                appointment.appointmentDate
+                appointment.appointmentDate,
               ).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
@@ -119,7 +119,7 @@ const ParentsSchedule = () => {
               });
 
               const fullDateTime = new Date(
-                `${appointment.appointmentDate}T${appointment.appointmentTime}`
+                `${appointment.appointmentDate}T${appointment.appointmentTime}`,
               );
 
               const formattedTime = fullDateTime.toLocaleTimeString("en-US", {

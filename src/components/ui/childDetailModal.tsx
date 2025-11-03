@@ -16,6 +16,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { usePathname } from "next/navigation";
 import emailjs from "emailjs-com";
 
+
 interface ChildDetails {
   id?: string;
   childName?: string;
@@ -83,57 +84,58 @@ export default function ChildDetailsModal({
   }, [isDoctorPage]);
 
   // ✅ Handle delete (for parent)
-const handleDelete = async () => {
-  if (!userId || !child.id) {
-    alert("Missing user or child ID.");
-    return;
-  }
+  const handleDelete = async () => {
+    if (!userId || !child.id) {
+      alert("Missing user or child ID.");
+      return;
+    }
 
-  const confirmDelete = confirm(
-    `Are you sure you want to delete ${child.childName}'s record from the system?`,
-  );
-  if (!confirmDelete) return;
-
-  setLoading(true);
-
-  try {
-    // --- 1. Delete from children collection
-    await deleteDoc(doc(db, "children", child.id));
-
-    // --- 2. Delete any appointments for this child
-    const appointmentsQuery = query(
-      collection(db, "appointments"),
-      where("childId", "==", child.id)
+    const confirmDelete = confirm(
+      `Are you sure you want to delete ${child.childName}'s record from the system?`,
     );
-    const appointmentsSnapshot = await getDocs(appointmentsQuery);
-    const appointmentDeletes = appointmentsSnapshot.docs.map((docSnap) =>
-      deleteDoc(doc(db, "appointments", docSnap.id))
-    );
-    await Promise.all(appointmentDeletes);
+    if (!confirmDelete) return;
 
-    // --- 3. Delete any history entries for this child
-    const historyQuery = query(
-      collection(db, "history"),
-      where("childId", "==", child.id)
-    );
-    const historySnapshot = await getDocs(historyQuery);
-    const historyDeletes = historySnapshot.docs.map((docSnap) =>
-      deleteDoc(doc(db, "history", docSnap.id))
-    );
-    await Promise.all(historyDeletes);
+    setLoading(true);
 
-    alert(`${child.childName}'s record has been fully deleted from the system.`);
-    onClose();
-  } catch (error) {
-    console.error("🔥 Error deleting child:", error);
-    alert("Failed to delete child completely. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      // --- 1. Delete from children collection
+      await deleteDoc(doc(db, "children", child.id));
 
+      // --- 2. Delete any appointments for this child
+      const appointmentsQuery = query(
+        collection(db, "appointments"),
+        where("childId", "==", child.id),
+      );
+      const appointmentsSnapshot = await getDocs(appointmentsQuery);
+      const appointmentDeletes = appointmentsSnapshot.docs.map((docSnap) =>
+        deleteDoc(doc(db, "appointments", docSnap.id)),
+      );
+      await Promise.all(appointmentDeletes);
 
-    // ✅ EmailJS helper
+      // --- 3. Delete any history entries for this child
+      const historyQuery = query(
+        collection(db, "history"),
+        where("childId", "==", child.id),
+      );
+      const historySnapshot = await getDocs(historyQuery);
+      const historyDeletes = historySnapshot.docs.map((docSnap) =>
+        deleteDoc(doc(db, "history", docSnap.id)),
+      );
+      await Promise.all(historyDeletes);
+
+      alert(
+        `${child.childName}'s record has been fully deleted from the system.`,
+      );
+      onClose();
+    } catch (error) {
+      console.error("🔥 Error deleting child:", error);
+      alert("Failed to delete child completely. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ EmailJS helper
   const sendAppointmentEmail = async () => {
     try {
       await emailjs.send(
@@ -145,17 +147,23 @@ const handleDelete = async () => {
           doctor_name: doctorName,
           child_name: child.childName,
           vaccination,
-          appointment_date: new Date(appointmentDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }),
-          appointment_time: new Date(`1970-01-01T${appointmentTime}:00`).toLocaleTimeString(
+          appointment_date: new Date(appointmentDate).toLocaleDateString(
             "en-US",
-            { hour: "numeric", minute: "2-digit", hour12: true }
+            {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            },
           ),
+          appointment_time: new Date(
+            `1970-01-01T${appointmentTime}:00`,
+          ).toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          }),
         },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
       );
       console.log("✅ Email notification sent successfully.");
     } catch (err) {
@@ -208,15 +216,14 @@ const handleDelete = async () => {
     } finally {
       setLoading(false);
     }
-
-
   };
 
   return (
     <div className="fixed z-50 inset-0 bg-black/50 flex items-center justify-center">
       <div className="glass w-[90%] max-w-lg rounded-lg p-6 overflow-y-auto max-h-[90vh] shadow-lg">
         <div className="flex flex-col justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">{`${child.childName}'s Details`}
+          <h2 className="text-2xl font-semibold">
+            {`${child.childName}'s Details`}
           </h2>
           {isDoctorPage && <p className="text-sm italic">{child.parentName}</p>}
         </div>

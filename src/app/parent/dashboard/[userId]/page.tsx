@@ -29,11 +29,10 @@ const ParentsDashboard = () => {
   useEffect(() => {
     if (!parentUid) return;
 
-    
     // --- Children
     const childrenQuery = query(
       collection(db, "children"),
-      where("parentUid", "==", parentUid)
+      where("parentUid", "==", parentUid),
     );
     const unsubscribeChildren = onSnapshot(childrenQuery, (snapshot) => {
       setChildrenCount(snapshot.size);
@@ -42,7 +41,7 @@ const ParentsDashboard = () => {
     // --- Scheduled appointments
     const scheduledQuery = query(
       collection(db, "appointments"),
-      where("parentUid", "==", parentUid)
+      where("parentUid", "==", parentUid),
     );
     const unsubscribeScheduled = onSnapshot(scheduledQuery, (snapshot) => {
       setScheduledCount(snapshot.size);
@@ -51,7 +50,7 @@ const ParentsDashboard = () => {
     // --- Completed vaccinations (history)
     const completedQuery = query(
       collection(db, "history"),
-      where("parentUid", "==", parentUid)
+      where("parentUid", "==", parentUid),
     );
     const unsubscribeCompleted = onSnapshot(completedQuery, (snapshot) => {
       setCompletedCount(snapshot.size);

@@ -35,7 +35,10 @@ const DashboardNav = ({ title }: Props) => {
       try {
         if (!storedUserId) return;
 
-        const q = query(collection(db, "users"), where("uid", "==", storedUserId));
+        const q = query(
+          collection(db, "users"),
+          where("uid", "==", storedUserId),
+        );
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
@@ -70,20 +73,60 @@ const DashboardNav = ({ title }: Props) => {
 
   // ✅ Role-based navigation links
   const parentLinks = [
-    { href: `/parent/dashboard/${userId}`, label: "Dashboard", icon: <MdDashboard size={20} /> },
-    { href: `/parent/dashboard/${userId}/children`, label: "My Children", icon: <MdPerson size={20} /> },
-    { href: `/parent/dashboard/${userId}/schedule`, label: "Appointment", icon: <GrSchedule size={18} /> },
-    { href: `/parent/dashboard/${userId}/history`, label: "History", icon: <HiChartBarSquare size={20} /> },
-    { href: `/parent/dashboard/${userId}/settings`, label: "Settings", icon: <CiSettings size={20} /> },
+    {
+      href: `/parent/dashboard/${userId}`,
+      label: "Dashboard",
+      icon: <MdDashboard size={20} />,
+    },
+    {
+      href: `/parent/dashboard/${userId}/children`,
+      label: "My Children",
+      icon: <MdPerson size={20} />,
+    },
+    {
+      href: `/parent/dashboard/${userId}/schedule`,
+      label: "Appointment",
+      icon: <GrSchedule size={18} />,
+    },
+    {
+      href: `/parent/dashboard/${userId}/history`,
+      label: "History",
+      icon: <HiChartBarSquare size={20} />,
+    },
+    {
+      href: `/parent/dashboard/${userId}/settings`,
+      label: "Settings",
+      icon: <CiSettings size={20} />,
+    },
     { href: `/signIn`, label: "LogOut", icon: <GoSignOut size={20} /> },
   ];
 
   const doctorLinks = [
-    { href: `/doctor/dashboard/${userId}`, label: "Dashboard", icon: <MdDashboard size={20} /> },
-    { href: `/doctor/dashboard/${userId}/children`, label: "Children", icon: <MdPerson size={20} /> },
-    { href: `/doctor/dashboard/${userId}/schedule`, label: "Appointments", icon: <GrSchedule size={18} /> },
-    { href: `/doctor/dashboard/${userId}/history`, label: "History", icon: <HiChartBarSquare size={20} /> },
-    { href: `/doctor/dashboard/${userId}/settings`, label: "Settings", icon: <CiSettings size={20} /> },
+    {
+      href: `/doctor/dashboard/${userId}`,
+      label: "Dashboard",
+      icon: <MdDashboard size={20} />,
+    },
+    {
+      href: `/doctor/dashboard/${userId}/children`,
+      label: "Children",
+      icon: <MdPerson size={20} />,
+    },
+    {
+      href: `/doctor/dashboard/${userId}/schedule`,
+      label: "Appointments",
+      icon: <GrSchedule size={18} />,
+    },
+    {
+      href: `/doctor/dashboard/${userId}/history`,
+      label: "History",
+      icon: <HiChartBarSquare size={20} />,
+    },
+    {
+      href: `/doctor/dashboard/${userId}/settings`,
+      label: "Settings",
+      icon: <CiSettings size={20} />,
+    },
     { href: `/signIn`, label: "LogOut", icon: <GoSignOut size={20} /> },
   ];
 
@@ -92,50 +135,50 @@ const DashboardNav = ({ title }: Props) => {
   return (
     <div className="sticky top-0 z-50 bg-gray-100">
       <nav className="sticky top-0 z-20 py-2 bg-gray-200">
-      <main className="flex items-center justify-between rounded p-1 border-gray-500 bg-white shadow px-2">
-        <h1 className="font-semibold capitalize text-[#1739b6]">{title}</h1>
+        <main className="flex items-center justify-between rounded p-1 border-gray-500 bg-white shadow px-2">
+          <h1 className="font-semibold capitalize text-[#1739b6]">{title}</h1>
 
-        <div className="flex items-center gap-3 font-medium ml-auto relative">
-          {/* ✅ Role-based dynamic welcome message */}
-          {showWelcome && userName && (
-            <h1 className="text-[#1739b6] font-semibold md:text-sm text-[10px] animate-fadeOut">
-              Hi 👋, {userName} 
-            </h1>
-          )}
+          <div className="flex items-center gap-3 font-medium ml-auto relative">
+            {/* ✅ Role-based dynamic welcome message */}
+            {showWelcome && userName && (
+              <h1 className="text-[#1739b6] font-semibold md:text-sm text-[10px] animate-fadeOut">
+                Hi 👋, {userName}
+              </h1>
+            )}
 
-          <div className="cursor-pointer text-[#4277DF] hover:text-[#0641B6] transition-colors duration-200">
-            <IoNotifications size={18} />
-          </div>
-
-          <div className="font-semibold text-[#efefef]">
-            <div className="sm:flex items-center bg-white rounded-[100px] px-1 border border-[#4277DF] hidden">
-              <CiSearch color="#1b2450" size={17} />
-              <input
-                className="rounded-[50px] outline-none text-black px-2 py-[2px] text-sm w-0 hover:w-[150px] focus:w-[150px] font-normal transition-width duration-500"
-                placeholder="Search..."
-              />
+            <div className="cursor-pointer text-[#4277DF] hover:text-[#0641B6] transition-colors duration-200">
+              <IoNotifications size={18} />
             </div>
-          </div>
 
-          <Image
-            src="/profile.svg"
-            alt="profile"
-            width={30}
-            height={40}
-            className="bg-red-400 rounded-full border cursor-pointer border-gray-400 shadow"
-          />
-        </div>
-        <div
-          onClick={() => setShowSidebar(!showSidebar)}
-          className="
+            <div className="font-semibold text-[#efefef]">
+              <div className="sm:flex items-center bg-white rounded-[100px] px-1 border border-[#4277DF] hidden">
+                <CiSearch color="#1b2450" size={17} />
+                <input
+                  className="rounded-[50px] outline-none text-black px-2 py-[2px] text-sm w-0 hover:w-[150px] focus:w-[150px] font-normal transition-width duration-500"
+                  placeholder="Search..."
+                />
+              </div>
+            </div>
+
+            <Image
+              src="/profile.svg"
+              alt="profile"
+              width={30}
+              height={40}
+              className="bg-red-400 rounded-full border cursor-pointer border-gray-400 shadow"
+            />
+          </div>
+          <div
+            onClick={() => setShowSidebar(!showSidebar)}
+            className="
             ml-2 text-xl p-1 rounded-lg bg-white/10 cursor-pointer border-gray-400 font-bold border 
             hover:border-dashed hover:text-[#1739b6] hover:border-[#1739b6] hover:bg-white/20 lg:hidden
             transition-all duration-300 ease-in-out"
-        >
-          <CiMenuFries size={20} />
-        </div>
-      </main>
-    </nav>
+          >
+            <CiMenuFries size={20} />
+          </div>
+        </main>
+      </nav>
       {/* onClick={() => setShowSidebar(!showSidebar)} */}
 
       {/* ✅ Sidebar (Mobile View) */}
@@ -179,7 +222,6 @@ const DashboardNav = ({ title }: Props) => {
               </Link>
             </li>
           ))}
-
         </ul>
       </aside>
 
