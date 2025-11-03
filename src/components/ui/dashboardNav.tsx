@@ -11,6 +11,7 @@ import { HiChartBarSquare } from "react-icons/hi2";
 import { usePathname } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { getDocs, collection, query, where } from "firebase/firestore";
+import { GoSignOut } from "react-icons/go";
 
 type Props = { title: string };
 
@@ -74,6 +75,7 @@ const DashboardNav = ({ title }: Props) => {
     { href: `/parent/dashboard/${userId}/schedule`, label: "Appointment", icon: <GrSchedule size={18} /> },
     { href: `/parent/dashboard/${userId}/history`, label: "History", icon: <HiChartBarSquare size={20} /> },
     { href: `/parent/dashboard/${userId}/settings`, label: "Settings", icon: <CiSettings size={20} /> },
+    { href: `/signIn`, label: "LogOut", icon: <GoSignOut size={20} /> },
   ];
 
   const doctorLinks = [
@@ -82,6 +84,7 @@ const DashboardNav = ({ title }: Props) => {
     { href: `/doctor/dashboard/${userId}/schedule`, label: "Appointments", icon: <GrSchedule size={18} /> },
     { href: `/doctor/dashboard/${userId}/history`, label: "History", icon: <HiChartBarSquare size={20} /> },
     { href: `/doctor/dashboard/${userId}/settings`, label: "Settings", icon: <CiSettings size={20} /> },
+    { href: `/signIn`, label: "LogOut", icon: <GoSignOut size={20} /> },
   ];
 
   const links = role === "doctor" ? doctorLinks : parentLinks;
@@ -95,8 +98,8 @@ const DashboardNav = ({ title }: Props) => {
         <div className="flex items-center gap-3 font-medium ml-auto relative">
           {/* ✅ Role-based dynamic welcome message */}
           {showWelcome && userName && (
-            <h1 className="text-[#1739b6] font-semibold text-sm animate-fadeOut">
-              Welcome back, {userName} 👋
+            <h1 className="text-[#1739b6] font-semibold md:text-sm text-[10px] animate-fadeOut">
+              Hi 👋, {userName} 
             </h1>
           )}
 
@@ -176,6 +179,7 @@ const DashboardNav = ({ title }: Props) => {
               </Link>
             </li>
           ))}
+
         </ul>
       </aside>
 

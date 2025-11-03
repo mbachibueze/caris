@@ -112,7 +112,7 @@ const History = () => {
   return (
     <div>
       <DashboardNav title="History" />
-      <main className="p-4 space-y-4">
+      <main className=" space-y-4">
         <h1 className="font-semibold text-xl text-[#142257] mb-3">
           Completed Vaccinations
         </h1>

@@ -140,7 +140,7 @@ const Schedule = () => {
     <div>
       <DashboardNav title="Appointments" />
 
-      <main className="space-y-4 p-4">
+      <main className="space-y-4 ">
         <h1 className="font-semibold text-xl text-[#142257] mb-3">
           Scheduled Appointments
         </h1>
