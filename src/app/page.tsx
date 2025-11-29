@@ -39,7 +39,7 @@ export default function Home() {
         <Service />
       </section>
 
-      <section className="w-[80%] m-auto">
+      {/* <section className="w-[80%] m-auto">
         <div className="p-5 bg-gray-200 rounded-lg flex flex-col gap-3 my-10">
           <h3 className="font-bold text-[#6819fa] ">Hello Adeola</h3>
           <p>An appointment has been schedule for your child: </p>
@@ -64,7 +64,7 @@ export default function Home() {
           <hr className="border-t border-gray-300" />
           <p className="text-xs">This is an automated message. Do not reply</p>
         </div>
-      </section>
+      </section> */}
 
       {/* Doctors */}
       <section id="doctors">
