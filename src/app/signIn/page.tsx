@@ -37,7 +37,11 @@ const SignIN = () => {
     setLoading(true);
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
       const user = userCredential.user;
 
       // ✅ Save or remove email based on "Remember Me"
@@ -123,7 +127,7 @@ const SignIN = () => {
       >
         <div>Back to Home</div>
       </Link>
-      <div className="bg-white rounded-2xl p-5 w-70 [&_input]:w-full ">
+      <div className="bg-white rounded-2xl p-5 w-100 h-100 [&_input] ">
         <fieldset id="sign_in">
           <legend className="font-bold text-2xl uppercase text-[#1739b6] text-center mb-5">
             Caris+
@@ -138,7 +142,7 @@ const SignIN = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-gray-300 outline-none border border-gray-300 rounded px-3 p-2"
+                className="bg-gray-300 outline-none border border-gray-300 rounded px-3 p-2 w-full"
               />
             </div>
 
@@ -149,38 +153,44 @@ const SignIN = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-gray-300 outline-none border border-gray-300 rounded px-3 p-2"
+                className="bg-gray-300 outline-none border border-amber-300 rounded px-3  p-2 w-full"
               />
             </div>
 
             {/* ✅ Remember Me */}
-            {/* <div className="flex border   items-center gap-2 mb-3">
-              <div className="flex items-center border w-full">
+            <div className="flex w-fit mx-auto mb-3">
+              <div className="flex items-center gap-3  w-full relative">
                 <input
                   type="checkbox"
                   id="rememberMe"
                   checked={rememberMe}
                   onChange={() => setRememberMe(!rememberMe)}
-                  className="cursor-pointer w-fit border " 
+                  className="cursor-pointer w-fit border border-red-600 "
                 />
-                <p  className="text-xs flex text-gray-700 cursor-pointer">
+                <p className="text-sm border flex text-gray-700 cursor-pointer ablsolute ">
                   Remember Me
                 </p>
               </div>
-            </div> */}
+            </div>
 
-            <div className="flex flex-col gap-3 text-center mt-3">
+            <div className="flex flex-col gap-3 text-center mt-10">
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-[#1739b6] mx-auto text-white font-medium p-2 px-8 rounded md:w-fit w-full disabled:opacity-50 cursor-pointer"
+                className="bg-[#1739b6] mx-auto text-white font-medium p-2 px-12 rounded md:w-fit w-full disabled:opacity-50 cursor-pointer"
               >
                 {loading ? "Signing In..." : "Sign In"}
               </button>
             </div>
 
-            {error && <p className="text-red-500 mt-2 text-xs text-center">{error}</p>}
-            {message && <p className="text-blue-500 mt-2 text-xs text-center">{message}</p>}
+            {error && (
+              <p className="text-red-500 mt-2 text-xs text-center">{error}</p>
+            )}
+            {message && (
+              <p className="text-blue-500 mt-2 text-xs text-center">
+                {message}
+              </p>
+            )}
           </form>
         </fieldset>
 

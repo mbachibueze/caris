@@ -14,8 +14,8 @@ import {
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { usePathname } from "next/navigation";
-
-
+import { toast } from "sonner";
+import emailjs from "@emailjs/browser";
 
 interface ChildDetails {
   id?: string;
@@ -32,6 +32,8 @@ interface ChildDetails {
   deliveryType?: string;
   parentName?: string;
   parentUid?: string;
+  parentEmail?: string;
+  parentFirstName?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
@@ -135,48 +137,93 @@ export default function ChildDetailsModal({
     }
   };
 
-
   // ✅ Handle appointment creation (for doctor)
   const handleSetAppointment = async () => {
-    if (!child.id || !appointmentDate || !appointmentTime || !vaccination) {
-      alert("Please fill in all appointment fields.");
-      return;
+    emailjs.init("I3uitscngkIieibuQ"); // Public Key
+
+    // 🔹 Format date: "2025-11-12" → "November 12, 2025"
+    let formattedDate = "Invalid date";
+    const d = new Date(appointmentDate);
+    if (!isNaN(d.getTime())) {
+      formattedDate = d.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
     }
 
-    if (isDoctorPage && !doctorName) {
-      alert("Unable to fetch doctor's name. Please try again.");
-      return;
-    }
+    // 🔹 Sanitize time
+    const cleanTime = (appointmentTime || "")
+      .toString()
+      .replace(/\u00a0/g, " ")
+      .replace(/[^0-9:\sapmAMP]/gi, "")
+      .trim()
+      .replace(/\s+/g, " ");
 
     setLoading(true);
+
     try {
+      // 🔹 Save to Firestore
       await addDoc(collection(db, "appointments"), {
         childId: child.id,
         childName: child.childName,
         parentName: child.parentName,
         parentUid: child.parentUid,
         doctorUid: userId,
-        doctorName: doctorName, // ✅ Add doctor’s full name
-        vaccination,
-        appointmentDate,
-        appointmentTime,
+        doctorName: doctorName || "Doctor",
+        vaccination: vaccination.trim(),
+        appointmentDate: appointmentDate, // raw ISO/string for queries
+        formattedDate, // human-readable (e.g., "November 12, 2025")
+        appointmentTime: cleanTime,
         createdAt: serverTimestamp(),
         status: "scheduled",
       });
 
+      // 🔹 Send email notification to parent
+      const templateParams = {
+        parentName: child.parentFirstName,
+        childName: child.childName,
+        vaccination,
+        appointmentDate: formattedDate,
+        appointmentTime: cleanTime,
+        doctorName: doctorName || "Doctor",
+        email: child.parentEmail,
+      };
 
-      alert(
-        `Appointment for ${child.parentName}'s child ${child.childName} has been scheduled successfully`,
+      const result = await emailjs.send(
+        "service_d8hjore", // Service ID (e.g., "service_xyz")
+        "template_29t8lwo", // Template ID (e.g., "template_abc")
+        templateParams,
       );
 
+      // ✅ Success
+      toast.success(`✅ Appointment set for ${child.childName}`, {
+        description: `Scheduled for ${formattedDate} at ${cleanTime}`,
+        duration: 3000,
+      });
+
+      // 🔹 Reset & close
       setShowAppointmentForm(false);
       setAppointmentDate("");
       setAppointmentTime("");
       setVaccination("");
       onClose();
     } catch (error) {
-      console.error("🔥 Error scheduling appointment:", error);
-      alert("Failed to schedule appointment. Please try again.");
+      const err = error as Error | { text?: string };
+      const message =
+        typeof err === "string"
+          ? err
+          : err instanceof Error
+            ? err.message
+            : typeof err === "object" && err && "text" in err
+              ? err.text
+              : "Unknown error";
+
+      console.error("📧 EmailJS error:", error);
+      toast.warning(`Appointment saved`, {
+        description: `Email failed: ${message}`,
+        duration: 5000,
+      });
     } finally {
       setLoading(false);
     }
@@ -190,6 +237,7 @@ export default function ChildDetailsModal({
             {`${child.childName}'s Details`}
           </h2>
           {isDoctorPage && <p className="text-sm italic">{child.parentName}</p>}
+          <p>Parent email: {child.parentEmail}</p>
         </div>
 
         {/* Basic Info */}
@@ -206,6 +254,8 @@ export default function ChildDetailsModal({
             </p>
             <p>
               <strong>Blood Group:</strong> {child.bloodGroup}
+              lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+              quod.
             </p>
           </div>
           <div>

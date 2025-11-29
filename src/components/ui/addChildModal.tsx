@@ -70,12 +70,16 @@ const AddChildModal = ({ onClose }: { onClose: () => void }) => {
 
       // 🔹 Step 2: Construct parentName if found
       let parentName = "Unknown Parent";
+      let parentEmail = "";
+      let parentFirstName = "";
 
       querySnapshot.forEach((doc) => {
         const userData = doc.data();
         const first = userData.firstname || userData.firstName || "";
         const last = userData.lastname || userData.lastName || "";
-        parentName = `${first} ${last}`.trim();
+        parentName = `${first} ${last}`;
+        parentFirstName = first;
+        parentEmail = userData.email || "";
       });
 
       const childId = uuidv4();
@@ -85,6 +89,8 @@ const AddChildModal = ({ onClose }: { onClose: () => void }) => {
         // photoURL: photoURL || "",
         parentUid: userId,
         parentName,
+        parentEmail,
+        parentFirstName,
         createdAt: serverTimestamp(),
       };
 
@@ -108,7 +114,7 @@ const AddChildModal = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 bg-black/20 flex items-center justify-center">
       <div className="glass2  custom-scrollbar w-[90%] max-w-lg rounded-lg p-6 shadow-lg overflow-y-auto max-h-[90vh] relative">
         <button
           onClick={onClose}
@@ -122,7 +128,7 @@ const AddChildModal = ({ onClose }: { onClose: () => void }) => {
           Add Child Details
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-3 flex flex-col">
           <input
             type="text"
             name="childName"

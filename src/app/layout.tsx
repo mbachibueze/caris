@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -12,8 +13,6 @@ const poppins = Poppins({
   preload: true,
   subsets: ["latin"],
 });
-
-
 
 export const metadata: Metadata = {
   title: "CareTrack – Remote Vaccination & Child Health Management",
@@ -27,13 +26,13 @@ export const metadata: Metadata = {
     "parent dashboard",
     "doctor dashboard",
     "child vaccination history",
-    "healthcare app"
+    "healthcare app",
   ],
   authors: [
     {
       name: "CareTrack Team",
-      url: "https://caretrack‑25.vercel.app"
-    }
+      url: "https://caretrack‑25.vercel.app",
+    },
   ],
   openGraph: {
     title: "CareTrack – Remote Vaccination & Child Health Management",
@@ -46,8 +45,8 @@ export const metadata: Metadata = {
         url: "https://caretrack-25.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "CareTrack – Monitor Child Vaccinations"
-      }
+        alt: "CareTrack – Monitor Child Vaccinations",
+      },
     ],
     type: "website",
   },
@@ -62,11 +61,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.svg"
+    apple: "/apple-touch-icon.svg",
   },
 };
-
-
 
 export default function RootLayout({
   children,
@@ -81,6 +78,7 @@ export default function RootLayout({
         })}
       >
         {children}
+        <Toaster position="bottom-center" duration={3000} offset="10px" />
       </body>
     </html>
   );

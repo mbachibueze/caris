@@ -188,42 +188,45 @@ const Schedule = () => {
                   <h2 className="font-semibold text-lg text-[#1739b6] mb-2">
                     {appointment.childName}
                   </h2>
-                  <p>
-                    <strong>Parent:</strong> {appointment.parentName}
-                  </p>
-                  <p>
-                    <strong>Vaccination:</strong> {appointment.vaccination}
-                  </p>
-                  <p>
-                    <strong>Date:</strong> {formattedDate}
-                  </p>
-                  <p>
-                    <strong>Time:</strong> {formattedTime}
-                  </p>
 
-                  {isParentPage && appointment.completedByName && (
+                  <div className="mb-3">
                     <p>
-                      <strong>Doctor:</strong> {appointment.completedByName}
+                      <strong>Parent:</strong> {appointment.parentName}
                     </p>
-                  )}
+                    <p>
+                      <strong>Vaccination:</strong> {appointment.vaccination}
+                    </p>
+                    <p>
+                      <strong>Date:</strong> {formattedDate}
+                    </p>
+                    <p>
+                      <strong>Time:</strong> {formattedTime}
+                    </p>
 
-                  <p>
-                    <strong>Status:</strong>{" "}
-                    <span
-                      className={`capitalize font-medium ${
-                        appointment.status === "completed"
-                          ? "text-green-700"
-                          : "text-yellow-700"
-                      }`}
-                    >
-                      {appointment.status}
-                    </span>
-                  </p>
+                    {isParentPage && appointment.completedByName && (
+                      <p>
+                        <strong>Doctor:</strong> {appointment.completedByName}
+                      </p>
+                    )}
+
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      <span
+                        className={`capitalize font-medium ${
+                          appointment.status === "completed"
+                            ? "text-green-700"
+                            : "text-yellow-700"
+                        }`}
+                      >
+                        {appointment.status}
+                      </span>
+                    </p>
+                  </div>
 
                   {isDoctorPage && (
                     <button
                       onClick={() => handleComplete(appointment)}
-                      className="border mt-3 ml-auto w-fit cursor-pointer text-sm px-3 py-1 rounded-full glass3"
+                      className="border mt-auto ml-auto w-fit cursor-pointer text-sm px-3 py-1 rounded-full glass3"
                     >
                       Mark as Completed
                     </button>
